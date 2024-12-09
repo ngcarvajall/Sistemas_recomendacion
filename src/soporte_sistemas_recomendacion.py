@@ -110,3 +110,30 @@ def filter_data(df):
     df = df[df.movieId.isin(filtered_ratings_per_movie_df)]
     df = df[df.userId.isin(filtered_ratings_per_user_df)]
     return df
+
+def top_games_by_genre(df, genre, top_n=5, orden='reviews'):
+    """
+    Devuelve el top N de juegos para un género específico basado en el número de reseñas en inglés.
+
+    Args:
+        df (pd.DataFrame): DataFrame que contiene los datos de los juegos.
+        genre (str): Género que deseas filtrar (e.g., 'Simulation').
+        top_n (int): Número de juegos a devolver en el top (default = 5).
+
+    Returns:
+        pd.DataFrame: Subset del DataFrame con el top N juegos para el género especificado.
+    """
+    # Filtrar por el género solicitado
+    filtered_df = df[df['genre'] == genre]
+    
+    if orden =='reviews':
+        orden = 'number_of_english_reviews'
+    elif orden == 'rating':
+        orden = 'overall_player_rating'
+    else:
+        print('Te has equivocado')
+
+    # Ordenar por la columna 'number_of_english_reviews' en orden descendente
+    top_games = filtered_df.sort_values(by=orden, ascending=False).head(top_n)
+    
+    return top_games
